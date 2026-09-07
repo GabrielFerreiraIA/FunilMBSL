@@ -1,10 +1,10 @@
 /* Esta etapa só escolhe o valor da contribuição. Gerar o Pix, cobrar e
    confirmar o pagamento é trabalho da etapa seguinte (checkout.ts). */
 import { CONFIG } from '../config';
-import { Estado, fmt } from '../estado';
+import { Estado, fmt, fmtMoeda } from '../estado';
 import { Track } from '../track';
 import { ir, exigirAssinatura } from '../navegacao';
-import { qa, qaAll, aoClicar } from '../dom';
+import { qa, qaAll, aoClicar, toast } from '../dom';
 import { alcanceDe } from './comuns';
 
 export function iniciarPagamento(): () => void {
@@ -188,6 +188,11 @@ export function iniciarPagamento(): () => void {
 
   if (btnContinuar) {
     remocoes.push(aoClicar(btnContinuar, () => {
+      if (!Number.isFinite(valor) || valor < CONFIG.contribuicao.valorMinimo) {
+        toast(`As doações são a partir de ${fmtMoedaSimples(CONFIG.contribuicao.valorMinimo)}.`);
+        custom?.focus();
+        return;
+      }
       Estado.salvar({ valor });
       ir('checkout');
     }));

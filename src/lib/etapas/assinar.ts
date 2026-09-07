@@ -80,6 +80,97 @@ export function iniciarAssinar(): () => void {
     }
   }
 
+  // Esconde o campo/bloco de cidade e estado travado
+  const cidadeInput = campo('city');
+  if (cidadeInput) {
+    const containerCidade = cidadeInput.closest('div[class*="flex"], div[class*="border"], div[role="presentation"]') as HTMLElement || cidadeInput.parentElement;
+    if (containerCidade) containerCidade.style.display = 'none';
+  }
+  document.querySelectorAll<HTMLElement>('[data-qa*="city"], [data-testid*="city"]').forEach((el) => {
+    el.style.display = 'none';
+  });
+
+  // Substitui Gabriel Ferreira por Lucas Silva no ticker superior
+  document.querySelectorAll<HTMLElement>('.funil-etapa-assinar span, .funil-etapa-assinar div').forEach((el) => {
+    if (el.children.length === 0 && /Gabriel\s+Ferreira/i.test(el.textContent ?? '')) {
+      el.textContent = el.textContent!.replace(/Gabriel\s+Ferreira/gi, 'Lucas Silva');
+    }
+  });
+
+  // Ticker superior deslizando suavemente para o lado
+  const topTicker = document.querySelector<HTMLElement>('.funil-etapa-assinar .overflow-x-hidden, .funil-etapa-assinar .snap-x');
+  if (topTicker) {
+    topTicker.style.overflowX = 'auto';
+    topTicker.style.scrollBehavior = 'auto';
+    topTicker.style.scrollbarWidth = 'none';
+
+    let scrollPos = topTicker.scrollLeft;
+    const timerTopScroll = setInterval(() => {
+      if (!topTicker) return;
+      scrollPos += 0.8;
+      if (scrollPos >= topTicker.scrollWidth - topTicker.clientWidth) {
+        scrollPos = 0;
+      }
+      topTicker.scrollLeft = scrollPos;
+    }, 25);
+
+    remocoes.push(() => clearInterval(timerTopScroll));
+  }
+
+  // Torna os botões de rádio (Sim/Não) e checkbox 100% clicáveis e responsivos
+  const optInRadio = document.querySelector<HTMLElement>('[data-qa="signform-gdprConsent-optIn-radio"]');
+  const optOutRadio = document.querySelector<HTMLElement>('[data-qa="signform-gdprConsent-optOut-radio"]');
+  const notPublicCheckbox = document.querySelector<HTMLElement>('[data-qa="signform-notPublic-checkbox"]');
+
+  const inputOptIn = optInRadio?.querySelector<HTMLInputElement>('input[type="radio"]') || document.querySelector<HTMLInputElement>('input[value="true"]');
+  const inputOptOut = optOutRadio?.querySelector<HTMLInputElement>('input[type="radio"]') || document.querySelector<HTMLInputElement>('input[value="false"]');
+  const inputNotPublic = notPublicCheckbox?.querySelector<HTMLInputElement>('input[type="checkbox"]') || document.querySelector<HTMLInputElement>('input[name="notPublic"]');
+
+  function atualizarRadiosVisual(sim: boolean) {
+    if (inputOptIn) inputOptIn.checked = sim;
+    if (inputOptOut) inputOptOut.checked = !sim;
+
+    if (optInRadio) {
+      optInRadio.setAttribute('data-selected', sim ? 'true' : 'false');
+      optInRadio.setAttribute('selected', sim ? 'true' : 'false');
+      const dot = optInRadio.querySelector('.after\\:scale-0, [class*="after:scale"]');
+      if (dot) (dot as HTMLElement).style.transform = sim ? 'scale(1)' : 'scale(0)';
+      if (dot) (dot as HTMLElement).style.opacity = sim ? '1' : '0';
+    }
+    if (optOutRadio) {
+      optOutRadio.setAttribute('data-selected', sim ? 'false' : 'true');
+      optOutRadio.setAttribute('selected', sim ? 'false' : 'true');
+      const dot = optOutRadio.querySelector('.after\\:scale-0, [class*="after:scale"]');
+      if (dot) (dot as HTMLElement).style.transform = sim ? 'scale(0)' : 'scale(1)';
+      if (dot) (dot as HTMLElement).style.opacity = sim ? '0' : '1';
+    }
+  }
+
+  if (optInRadio) remocoes.push(aoClicar(optInRadio, () => atualizarRadiosVisual(true)));
+  if (optOutRadio) remocoes.push(aoClicar(optOutRadio, () => atualizarRadiosVisual(false)));
+
+  if (notPublicCheckbox) {
+    remocoes.push(aoClicar(notPublicCheckbox, (e) => {
+      e.preventDefault();
+      if (inputNotPublic) {
+        inputNotPublic.checked = !inputNotPublic.checked;
+        const checked = inputNotPublic.checked;
+        if (checked) {
+          notPublicCheckbox.setAttribute('data-selected', 'true');
+          notPublicCheckbox.setAttribute('selected', 'true');
+        } else {
+          notPublicCheckbox.removeAttribute('data-selected');
+          notPublicCheckbox.removeAttribute('selected');
+        }
+        const checkIcon = notPublicCheckbox.querySelector('svg');
+        if (checkIcon) {
+          checkIcon.style.opacity = checked ? '1' : '0';
+          checkIcon.style.transform = checked ? 'scale(1)' : 'scale(0.5)';
+        }
+      }
+    }));
+  }
+
   const submitBtn = qa('signform-submit-button') ?? document.querySelector('button[type="submit"]');
   if (submitBtn) {
     remocoes.push(aoClicar(submitBtn, enviar));
@@ -87,11 +178,11 @@ export function iniciarAssinar(): () => void {
 
   // enter em qualquer campo envia
   const onKeydown = (ev: KeyboardEvent) => { if (ev.key === 'Enter') { ev.preventDefault(); void enviar(); } };
-  [nome, sobre, email, cidade].forEach((el) => el?.addEventListener('keydown', onKeydown));
+  [nome, sobre, email].forEach((el) => el?.addEventListener('keydown', onKeydown));
 
   return () => {
     remocoes.forEach((f) => f());
-    [nome, sobre, email, cidade].forEach((el) => el?.removeEventListener('keydown', onKeydown));
+    [nome, sobre, email].forEach((el) => el?.removeEventListener('keydown', onKeydown));
   };
 }
 

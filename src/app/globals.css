@@ -547,3 +547,45 @@ body:has(.funil-etapa-checkout),
   font-weight: 500 !important;
   margin-top: 6px !important;
 }
+
+/* Oculta o campo de cidade/estado travado em /assinar */
+.funil-etapa-assinar [data-qa*="city"],
+.funil-etapa-assinar [data-testid*="city"],
+.funil-etapa-assinar div:has(> input[name="city"]) {
+  display: none !important;
+}
+
+/* Ticker superior deslizando na horizontal */
+.funil-etapa-assinar .overflow-x-hidden,
+.funil-etapa-assinar .snap-x {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.funil-etapa-assinar .overflow-x-hidden::-webkit-scrollbar,
+.funil-etapa-assinar .snap-x::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Destaque visual dos botões de rádio e checkbox em /assinar */
+.funil-etapa-assinar [data-qa*="gdprConsent"][data-selected="true"]::before,
+.funil-etapa-assinar [data-qa*="gdprConsent"][selected]::before {
+  border-color: #eab308 !important;
+  background-color: #ffffff !important;
+}
+.funil-etapa-assinar [data-qa*="gdprConsent"][data-selected="true"]::after,
+.funil-etapa-assinar [data-qa*="gdprConsent"][selected]::after {
+  transform: scale(1) !important;
+  opacity: 1 !important;
+  background-color: #eab308 !important;
+}
+
+.funil-etapa-assinar [data-qa*="notPublic"][data-selected="true"] svg,
+.funil-etapa-assinar [data-qa*="notPublic"][selected] svg {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+.funil-etapa-assinar [data-qa*="notPublic"][data-selected="true"] > div,
+.funil-etapa-assinar [data-qa*="notPublic"][selected] > div {
+  background-color: #eab308 !important;
+  border-color: #eab308 !important;
+}
