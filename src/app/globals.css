@@ -589,3 +589,21 @@ body:has(.funil-etapa-checkout),
   background-color: #eab308 !important;
   border-color: #eab308 !important;
 }
+
+/* Feed vertical de doadores (Impacto) - mostrando sempre 2 por vez com rolagem fluida */
+#hero-feed-accessible-list {
+  max-height: 80px !important;
+  height: 80px !important;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+#hero-feed-accessible-list::-webkit-scrollbar {
+  display: none !important;
+}
+

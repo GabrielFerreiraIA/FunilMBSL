@@ -2,6 +2,7 @@ import { CONFIG } from '../config';
 import { Track } from '../track';
 import { ir, exigirAssinatura } from '../navegacao';
 import { qa, aoClicar } from '../dom';
+import { animarFeedDoadores } from './comuns';
 
 export function iniciarTurbinar(): () => void {
   if (!exigirAssinatura()) return () => {};
@@ -9,7 +10,10 @@ export function iniciarTurbinar(): () => void {
   const ancora = CONFIG.contribuicao.valorAncora;
   Track.ev('view_upsell', { valor_ancora: ancora });
 
+  const pararFeed = animarFeedDoadores();
+
   const remocoes = [
+    pararFeed,
     aoClicar(qa('promote-button'), () => {
       Track.ev('aceite_upsell', { valor: ancora });
       ir('pagamento', { valor: ancora });
@@ -26,3 +30,4 @@ export function iniciarTurbinar(): () => void {
 
   return () => remocoes.forEach((f) => f());
 }
+

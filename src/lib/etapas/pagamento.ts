@@ -5,7 +5,7 @@ import { Estado, fmt, fmtMoeda } from '../estado';
 import { Track } from '../track';
 import { ir, exigirAssinatura } from '../navegacao';
 import { qa, qaAll, aoClicar, toast } from '../dom';
-import { alcanceDe } from './comuns';
+import { alcanceDe, animarFeedDoadores } from './comuns';
 
 export function iniciarPagamento(): () => void {
   if (!exigirAssinatura()) return () => {};
@@ -18,6 +18,7 @@ export function iniciarPagamento(): () => void {
   const submit = qa('promote-submit-button');
 
   Track.ev('view_pagamento', { valor_inicial: valor });
+
 
   /* -- seleção visual --
      O capture já traz um botão selecionado. Em vez de inventar um estilo,
@@ -87,7 +88,8 @@ export function iniciarPagamento(): () => void {
     }
   }
 
-  const remocoes: (() => void)[] = [];
+  const remocoes: (() => void)[] = [animarFeedDoadores()];
+
   btns.forEach((b) => {
     remocoes.push(aoClicar(b, () => {
       const v = valorDoBotao(b);
@@ -189,7 +191,7 @@ export function iniciarPagamento(): () => void {
   if (btnContinuar) {
     remocoes.push(aoClicar(btnContinuar, () => {
       if (!Number.isFinite(valor) || valor < CONFIG.contribuicao.valorMinimo) {
-        toast(`As doações são a partir de ${fmtMoedaSimples(CONFIG.contribuicao.valorMinimo)}.`);
+        toast(`As doações são a partir de ${fmtMoeda(CONFIG.contribuicao.valorMinimo)}.`);
         custom?.focus();
         return;
       }
