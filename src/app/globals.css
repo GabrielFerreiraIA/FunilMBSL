@@ -548,47 +548,70 @@ body:has(.funil-etapa-checkout),
   margin-top: 6px !important;
 }
 
-/* Oculta o campo de cidade/estado travado em /assinar */
+/* Oculta por completo o campo/botão de cidade e estado (Barueri, Brasil) e reduz espaço vago */
 .funil-etapa-assinar [data-qa*="city"],
 .funil-etapa-assinar [data-testid*="city"],
-.funil-etapa-assinar div:has(> input[name="city"]) {
+.funil-etapa-assinar input[name="city"],
+.funil-etapa-assinar [data-qa="sign-form-profile-edit-link"],
+.funil-etapa-assinar button[data-qa="sign-form-profile-edit-link"],
+.funil-etapa-assinar button[aria-label*="Barueri"],
+.funil-etapa-assinar div:has(> button[data-qa="sign-form-profile-edit-link"]) {
   display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
 }
 
-/* Ticker superior deslizando na horizontal */
+/* Ticker superior de signatários deslizando na horizontal */
 .funil-etapa-assinar .overflow-x-hidden,
 .funil-etapa-assinar .snap-x {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  scroll-behavior: auto !important;
 }
 .funil-etapa-assinar .overflow-x-hidden::-webkit-scrollbar,
 .funil-etapa-assinar .snap-x::-webkit-scrollbar {
   display: none !important;
 }
 
-/* Destaque visual dos botões de rádio e checkbox em /assinar */
-.funil-etapa-assinar [data-qa*="gdprConsent"][data-selected="true"]::before,
-.funil-etapa-assinar [data-qa*="gdprConsent"][selected]::before {
+/* Estilo estritamente individual para cada botão de rádio (Sim/Não) */
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optIn-radio"][data-selected="true"]::before,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optIn-radio"].is-selected::before,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optOut-radio"][data-selected="true"]::before,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optOut-radio"].is-selected::before {
   border-color: #eab308 !important;
   background-color: #ffffff !important;
 }
-.funil-etapa-assinar [data-qa*="gdprConsent"][data-selected="true"]::after,
-.funil-etapa-assinar [data-qa*="gdprConsent"][selected]::after {
+
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optIn-radio"][data-selected="true"]::after,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optIn-radio"].is-selected::after,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optOut-radio"][data-selected="true"]::after,
+.funil-etapa-assinar [data-qa="signform-gdprConsent-optOut-radio"].is-selected::after {
   transform: scale(1) !important;
   opacity: 1 !important;
   background-color: #eab308 !important;
 }
 
+/* Esconde o ponto no rádio desmarcado */
+.funil-etapa-assinar [data-qa*="gdprConsent"][data-selected="false"]::after,
+.funil-etapa-assinar [data-qa*="gdprConsent"].is-unselected::after,
+.funil-etapa-assinar [data-qa*="gdprConsent"]:not([data-selected="true"]):not(.is-selected)::after {
+  transform: scale(0) !important;
+  opacity: 0 !important;
+}
+
+/* Checkbox Não exibir meu nome */
 .funil-etapa-assinar [data-qa*="notPublic"][data-selected="true"] svg,
-.funil-etapa-assinar [data-qa*="notPublic"][selected] svg {
+.funil-etapa-assinar [data-qa*="notPublic"].is-selected svg {
   opacity: 1 !important;
   transform: scale(1) !important;
 }
 .funil-etapa-assinar [data-qa*="notPublic"][data-selected="true"] > div,
-.funil-etapa-assinar [data-qa*="notPublic"][selected] > div {
+.funil-etapa-assinar [data-qa*="notPublic"].is-selected > div {
   background-color: #eab308 !important;
   border-color: #eab308 !important;
 }
+
 
 /* Feed vertical de doadores (Impacto) - mostrando sempre 2 por vez com rolagem fluida */
 #hero-feed-accessible-list {

@@ -17,8 +17,6 @@ export function iniciarAssinar(): () => void {
     remocoes.push(aoClicar(btn as HTMLElement, () => ir('peticao')));
   });
 
-  /* O formulário do Change.org existe em duas variantes: campos separados
-     "Nome" + "Sobrenome", ou um único campo combinado "Nome completo". */
   const campo = (n: string) => document.querySelector<HTMLInputElement>(`[name="${n}"]`);
   const nome = campo('firstName');
   const sobre = campo('lastName');
@@ -59,7 +57,7 @@ export function iniciarAssinar(): () => void {
     const dados = {
       nome: (nomeUnico ? n : `${n} ${s}`).trim(),
       email: e,
-      cidade: (cidade?.value ?? '').trim(),
+      cidade: '',
       assinou: true
     };
 
@@ -80,15 +78,29 @@ export function iniciarAssinar(): () => void {
     }
   }
 
-  // Esconde o campo/bloco de cidade e estado travado
-  const cidadeInput = campo('city');
-  if (cidadeInput) {
-    const containerCidade = cidadeInput.closest('div[class*="flex"], div[class*="border"], div[role="presentation"]') as HTMLElement || cidadeInput.parentElement;
-    if (containerCidade) containerCidade.style.display = 'none';
-  }
-  document.querySelectorAll<HTMLElement>('[data-qa*="city"], [data-testid*="city"]').forEach((el) => {
-    el.style.display = 'none';
-  });
+  // Remotamente esconde por completo o bloco/botão de cidade e estado travado (Barueri, Brasil)
+  const ocultarLocalizacao = () => {
+    const editLocationBtn = document.querySelector<HTMLElement>('[data-qa="sign-form-profile-edit-link"], button[aria-label*="Barueri"], button[aria-label*="localização"]');
+    if (editLocationBtn) {
+      editLocationBtn.style.display = 'none';
+      let parent = editLocationBtn.parentElement;
+      if (parent) {
+        parent.style.display = 'none';
+        parent.style.margin = '0';
+        parent.style.padding = '0';
+        if (parent.parentElement && (parent.parentElement.classList.contains('mt-4') || parent.parentElement.classList.contains('mb-2'))) {
+          parent.parentElement.style.display = 'none';
+          parent.parentElement.style.margin = '0';
+        }
+      }
+    }
+    document.querySelectorAll<HTMLElement>('[data-qa*="city"], [data-testid*="city"], input[name="city"]').forEach((el) => {
+      el.style.display = 'none';
+      const p = el.closest('div');
+      if (p) p.style.display = 'none';
+    });
+  };
+  ocultarLocalizacao();
 
   // Substitui Gabriel Ferreira por Lucas Silva no ticker superior
   document.querySelectorAll<HTMLElement>('.funil-etapa-assinar span, .funil-etapa-assinar div').forEach((el) => {
@@ -97,27 +109,35 @@ export function iniciarAssinar(): () => void {
     }
   });
 
-  // Ticker superior deslizando suavemente para o lado
+  // Ticker superior de signatários deslizando continuamente da esquerda para a direita
   const topTicker = document.querySelector<HTMLElement>('.funil-etapa-assinar .overflow-x-hidden, .funil-etapa-assinar .snap-x');
   if (topTicker) {
-    topTicker.style.overflowX = 'auto';
+    topTicker.classList.remove('scroll-smooth');
     topTicker.style.scrollBehavior = 'auto';
-    topTicker.style.scrollbarWidth = 'none';
+    topTicker.style.overflowX = 'hidden';
+    topTicker.style.display = 'flex';
+    topTicker.style.whiteSpace = 'nowrap';
 
-    let scrollPos = topTicker.scrollLeft;
+    if (!topTicker.getAttribute('data-ticker-duplicado')) {
+      topTicker.setAttribute('data-ticker-duplicado', 'true');
+      topTicker.innerHTML = topTicker.innerHTML + topTicker.innerHTML;
+    }
+
+    let scrollPos = 0;
     const timerTopScroll = setInterval(() => {
       if (!topTicker) return;
       scrollPos += 0.8;
-      if (scrollPos >= topTicker.scrollWidth - topTicker.clientWidth) {
+      const meiaLargura = topTicker.scrollWidth / 2;
+      if (meiaLargura > 0 && scrollPos >= meiaLargura) {
         scrollPos = 0;
       }
       topTicker.scrollLeft = scrollPos;
-    }, 25);
+    }, 20);
 
     remocoes.push(() => clearInterval(timerTopScroll));
   }
 
-  // Torna os botões de rádio (Sim/Não) e checkbox 100% clicáveis e responsivos
+  // Gerenciamento dos botões de rádio (Sim/Não) mutuamente exclusivos
   const optInRadio = document.querySelector<HTMLElement>('[data-qa="signform-gdprConsent-optIn-radio"]');
   const optOutRadio = document.querySelector<HTMLElement>('[data-qa="signform-gdprConsent-optOut-radio"]');
   const notPublicCheckbox = document.querySelector<HTMLElement>('[data-qa="signform-notPublic-checkbox"]');
@@ -126,46 +146,70 @@ export function iniciarAssinar(): () => void {
   const inputOptOut = optOutRadio?.querySelector<HTMLInputElement>('input[type="radio"]') || document.querySelector<HTMLInputElement>('input[value="false"]');
   const inputNotPublic = notPublicCheckbox?.querySelector<HTMLInputElement>('input[type="checkbox"]') || document.querySelector<HTMLInputElement>('input[name="notPublic"]');
 
-  function atualizarRadiosVisual(sim: boolean) {
+  function selecionarRadio(sim: boolean) {
     if (inputOptIn) inputOptIn.checked = sim;
     if (inputOptOut) inputOptOut.checked = !sim;
 
     if (optInRadio) {
-      optInRadio.setAttribute('data-selected', sim ? 'true' : 'false');
-      optInRadio.setAttribute('selected', sim ? 'true' : 'false');
-      const dot = optInRadio.querySelector('.after\\:scale-0, [class*="after:scale"]');
-      if (dot) (dot as HTMLElement).style.transform = sim ? 'scale(1)' : 'scale(0)';
-      if (dot) (dot as HTMLElement).style.opacity = sim ? '1' : '0';
+      if (sim) {
+        optInRadio.setAttribute('data-selected', 'true');
+        optInRadio.setAttribute('aria-checked', 'true');
+        optInRadio.classList.add('is-selected');
+        optInRadio.classList.remove('is-unselected');
+      } else {
+        optInRadio.setAttribute('data-selected', 'false');
+        optInRadio.setAttribute('aria-checked', 'false');
+        optInRadio.classList.remove('is-selected');
+        optInRadio.classList.add('is-unselected');
+      }
     }
+
     if (optOutRadio) {
-      optOutRadio.setAttribute('data-selected', sim ? 'false' : 'true');
-      optOutRadio.setAttribute('selected', sim ? 'false' : 'true');
-      const dot = optOutRadio.querySelector('.after\\:scale-0, [class*="after:scale"]');
-      if (dot) (dot as HTMLElement).style.transform = sim ? 'scale(0)' : 'scale(1)';
-      if (dot) (dot as HTMLElement).style.opacity = sim ? '0' : '1';
+      if (!sim) {
+        optOutRadio.setAttribute('data-selected', 'true');
+        optOutRadio.setAttribute('aria-checked', 'true');
+        optOutRadio.classList.add('is-selected');
+        optOutRadio.classList.remove('is-unselected');
+      } else {
+        optOutRadio.setAttribute('data-selected', 'false');
+        optOutRadio.setAttribute('aria-checked', 'false');
+        optOutRadio.classList.remove('is-selected');
+        optOutRadio.classList.add('is-unselected');
+      }
     }
   }
 
-  if (optInRadio) remocoes.push(aoClicar(optInRadio, () => atualizarRadiosVisual(true)));
-  if (optOutRadio) remocoes.push(aoClicar(optOutRadio, () => atualizarRadiosVisual(false)));
+  // Inicializa "Sim!" como selecionado por padrão
+  selecionarRadio(true);
+
+  if (optInRadio) {
+    remocoes.push(aoClicar(optInRadio, (ev) => {
+      ev.preventDefault();
+      selecionarRadio(true);
+    }));
+  }
+
+  if (optOutRadio) {
+    remocoes.push(aoClicar(optOutRadio, (ev) => {
+      ev.preventDefault();
+      selecionarRadio(false);
+    }));
+  }
 
   if (notPublicCheckbox) {
-    remocoes.push(aoClicar(notPublicCheckbox, (e) => {
-      e.preventDefault();
+    remocoes.push(aoClicar(notPublicCheckbox, (ev) => {
+      ev.preventDefault();
       if (inputNotPublic) {
         inputNotPublic.checked = !inputNotPublic.checked;
         const checked = inputNotPublic.checked;
         if (checked) {
           notPublicCheckbox.setAttribute('data-selected', 'true');
-          notPublicCheckbox.setAttribute('selected', 'true');
+          notPublicCheckbox.setAttribute('aria-checked', 'true');
+          notPublicCheckbox.classList.add('is-selected');
         } else {
-          notPublicCheckbox.removeAttribute('data-selected');
-          notPublicCheckbox.removeAttribute('selected');
-        }
-        const checkIcon = notPublicCheckbox.querySelector('svg');
-        if (checkIcon) {
-          checkIcon.style.opacity = checked ? '1' : '0';
-          checkIcon.style.transform = checked ? 'scale(1)' : 'scale(0.5)';
+          notPublicCheckbox.setAttribute('data-selected', 'false');
+          notPublicCheckbox.setAttribute('aria-checked', 'false');
+          notPublicCheckbox.classList.remove('is-selected');
         }
       }
     }));
@@ -185,4 +229,5 @@ export function iniciarAssinar(): () => void {
     [nome, sobre, email].forEach((el) => el?.removeEventListener('keydown', onKeydown));
   };
 }
+
 
