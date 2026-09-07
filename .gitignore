@@ -1,0 +1,15 @@
+# dependências
+/node_modules
+
+# build do Next.js
+/.next/
+/out/
+
+# ambiente local — NUNCA commitar chaves de API
+.env
+.env*.local
+
+# logs e diagnósticos
+npm-debug.log*
+*.tsbuildinfo
+next-env.d.ts

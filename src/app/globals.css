@@ -1,0 +1,549 @@
+/* Reset mínimo — o grosso do estilo visual vem embutido no próprio HTML
+   capturado (dezenas de <style> por página, preservados como estavam). */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img, svg { max-width: 100%; }
+
+/* =============================================================================
+   ESTILOS ADICIONAIS - FUNIL PETIÇÃO (FIXES E OTIMIZAÇÕES)
+   ============================================================================= */
+
+/* 1. Botão Fixo na Parte de Baixo (Sticky CTA Bar) */
+.funil-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(120%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.funil-sticky-bar.visible {
+  transform: translateY(0);
+}
+
+.funil-sticky-btn {
+  width: 100%;
+  max-width: 480px;
+  height: 52px;
+  background: linear-gradient(180deg, #fff033 0%, #ecbe00 100%);
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+  border: none;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(236, 190, 0, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.funil-sticky-btn:active {
+  transform: scale(0.98);
+}
+
+/* 2. UI/UX PRO MAX - OTIMIZAÇÃO E REDESIGN DA ETAPA 2 (/assinar) */
+
+@keyframes funilCardPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Fundo 100% BRANCO / LIGHT para a Página de Assinatura (Etapa 2) */
+html:has(.funil-etapa-assinar),
+body:has(.funil-etapa-assinar),
+.funil-etapa-assinar {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+}
+
+/* Oculta o conteúdo estático da petição de fundo no /assinar para evitar poluição visual */
+.funil-etapa-assinar #rootApp {
+  display: none !important;
+}
+
+/* Overlay do Modal em Fundo Branco Limpo */
+.funil-etapa-assinar .group\/ModalOverlay,
+.funil-etapa-assinar .bg-fill-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  z-index: 9999 !important;
+  background-color: #ffffff !important;
+  overflow-y: auto !important;
+}
+
+/* Container de alinhamento */
+.funil-etapa-assinar .bg-fill-overlay > div,
+.funil-etapa-assinar [data-rac] {
+  box-shadow: none !important;
+}
+
+/* Card Principal do Formulário */
+.funil-etapa-assinar [data-qa="sign-form-modal"],
+.funil-etapa-assinar .elevation-floating {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+  max-width: 500px !important;
+  width: 100% !important;
+  margin: auto !important;
+  padding: 24px 24px 28px 24px !important;
+  animation: funilCardPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  border: 1px solid #e2e8f0 !important;
+  max-height: 92vh !important;
+  overflow-y: auto !important;
+}
+
+/* Título e Cabeçalho do Card */
+.funil-etapa-assinar h2[slot="title"],
+.funil-etapa-assinar [aria-labelledby] h2 {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+/* Botão de Fechar (X) */
+.funil-etapa-assinar [data-qa="modal-close-button"],
+.funil-etapa-assinar button[aria-label="Fechar"] {
+  background-color: #f1f5f9 !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  transition: background-color 0.2s ease, color 0.2s ease !important;
+  border: none !important;
+}
+
+.funil-etapa-assinar [data-qa="modal-close-button"]:hover,
+.funil-etapa-assinar button[aria-label="Fechar"]:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* CORREÇÃO DO BUG DE BORDA DUPLA NOS INPUTS:
+   Estiliza o div container (parent) como o único box do campo e limpa a marcação no input interno. */
+
+.funil-etapa-assinar div[data-testid*="-input"] > div,
+.funil-etapa-assinar div[data-qa*="-input"] > div,
+.funil-etapa-assinar form div[role="presentation"],
+.funil-etapa-assinar form div:has(> input[type="text"]),
+.funil-etapa-assinar form div:has(> input[type="email"]) {
+  background-color: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  height: 50px !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* Foco no Container do Input (Substitui o foco azul por um amarelo limpo sem borda dupla) */
+.funil-etapa-assinar div[data-testid*="-input"] > div:focus-within,
+.funil-etapa-assinar div[data-qa*="-input"] > div:focus-within,
+.funil-etapa-assinar form div[role="presentation"]:focus-within,
+.funil-etapa-assinar form div:has(> input[type="text"]):focus-within,
+.funil-etapa-assinar form div:has(> input[type="email"]):focus-within {
+  background-color: #ffffff !important;
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 3.5px rgba(234, 179, 8, 0.25) !important;
+  outline: none !important;
+}
+
+/* Limpa totalmente a borda, fundo e outline do <input> filho para não sobrepor */
+.funil-etapa-assinar input[type="text"],
+.funil-etapa-assinar input[type="email"],
+.funil-etapa-assinar select,
+#mobile___signform-first-name-input,
+#mobile___signform-last-name-input,
+#mobile___signform-email-input,
+#mobile___signform-city-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  height: 100% !important;
+  width: 100% !important;
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  padding: 0 4px !important;
+}
+
+.funil-etapa-assinar input:focus,
+.funil-etapa-assinar select:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Placeholders */
+.funil-etapa-assinar ::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+/* Botão de Envio (CTA Principal) */
+.funil-etapa-assinar [data-qa="signform-submit-button"],
+.funil-etapa-assinar button[type="submit"] {
+  background: linear-gradient(180deg, #facc15 0%, #eab308 100%) !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  letter-spacing: -0.3px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  height: 54px !important;
+  width: 100% !important;
+  box-shadow: 0 6px 20px -2px rgba(234, 179, 8, 0.45) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.funil-etapa-assinar [data-qa="signform-submit-button"]:hover,
+.funil-etapa-assinar button[type="submit"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px -2px rgba(234, 179, 8, 0.55) !important;
+}
+
+.funil-etapa-assinar [data-qa="signform-submit-button"]:active,
+.funil-etapa-assinar button[type="submit"]:active {
+  transform: translateY(1px) scale(0.99) !important;
+}
+
+/* Badge de Ticker ("Fulano acabou de assinar") */
+.funil-etapa-assinar .bg-fill-inverse-weak {
+  background-color: #f1f5f9 !important;
+  border-radius: 9999px !important;
+  padding: 6px 14px !important;
+}
+
+/* Botão Continuar no Branding (Etapa 4 - /pagamento) */
+.funil-btn-continuar {
+  background: linear-gradient(180deg, #facc15 0%, #eab308 100%) !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  letter-spacing: -0.3px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  height: 54px !important;
+  width: 100% !important;
+  box-shadow: 0 6px 20px -2px rgba(234, 179, 8, 0.45) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.funil-btn-continuar:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px -2px rgba(234, 179, 8, 0.55) !important;
+}
+
+.funil-btn-continuar:active {
+  transform: translateY(1px) scale(0.99) !important;
+}
+
+/* =============================================================================
+   3. UI/UX PRO MAX - ETAPA CHECKOUT (/checkout - Complete seus dados)
+   ============================================================================= */
+
+html:has(.funil-etapa-checkout),
+body:has(.funil-etapa-checkout),
+.funil-etapa-checkout {
+  background-color: #ffffff !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  font-family: 'Commissioner', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
+}
+
+.funil-etapa-checkout .group\/ModalOverlay {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  z-index: 9999 !important;
+  background-color: #ffffff !important;
+  overflow-y: auto !important;
+}
+
+.checkout-card-container {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+  max-width: 480px !important;
+  width: 100% !important;
+  margin: auto !important;
+  padding: 24px !important;
+  border: 1px solid #e2e8f0 !important;
+  animation: funilCardPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.checkout-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 20px !important;
+}
+
+.checkout-btn-voltar {
+  color: #64748b !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 8px !important;
+  border-radius: 8px !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.checkout-btn-voltar:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.checkout-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #2d2f37 !important;
+  margin: 0 !important;
+}
+
+.checkout-btn-fechar {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background-color: #f1f5f9 !important;
+  color: #64748b !important;
+  font-size: 20px !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.checkout-btn-fechar:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.checkout-badge-wrapper {
+  margin-bottom: 20px !important;
+}
+
+.checkout-badge {
+  background-color: #fffbeb !important;
+  border-radius: 9999px !important;
+  padding: 8px 18px !important;
+  color: #92400e !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.checkout-field-group {
+  margin-bottom: 16px !important;
+}
+
+.checkout-label {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+.checkout-input-wrapper {
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  height: 50px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.checkout-input-wrapper:focus-within {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 3.5px rgba(234, 179, 8, 0.25) !important;
+}
+
+.checkout-input-wrapper input {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  padding: 0 16px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}
+
+.checkout-checkbox-group {
+  margin: 10px 0 18px 0 !important;
+}
+
+.checkout-checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 14px !important;
+  color: #475569 !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.checkout-checkbox-label input {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: #eab308 !important;
+  cursor: pointer !important;
+}
+
+.checkout-orderbump-box {
+  background-color: #fefce8 !important;
+  border: 1.5px solid #fef08a !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  margin: 20px 0 !important;
+}
+
+.checkout-orderbump-label {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+}
+
+.checkout-orderbump-label input {
+  width: 20px !important;
+  height: 20px !important;
+  accent-color: #eab308 !important;
+  margin-top: 2px !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+}
+
+.checkout-orderbump-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.checkout-orderbump-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #78350f !important;
+}
+
+.checkout-orderbump-desc {
+  font-size: 13px !important;
+  color: #a16207 !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+.checkout-submit-wrapper {
+  margin-top: 22px !important;
+}
+
+.funil-btn-checkout {
+  background: linear-gradient(180deg, #facc15 0%, #eab308 100%) !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  letter-spacing: -0.3px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  height: 54px !important;
+  width: 100% !important;
+  box-shadow: 0 6px 20px -2px rgba(234, 179, 8, 0.45) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.funil-btn-checkout:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px -2px rgba(234, 179, 8, 0.55) !important;
+}
+
+.funil-btn-checkout:active {
+  transform: translateY(1px) scale(0.99) !important;
+}
+
+.checkout-footer-note {
+  text-align: center !important;
+  font-size: 13px !important;
+  color: #64748b !important;
+  margin-top: 10px !important;
+  font-weight: 500 !important;
+}
+
+.checkout-erro {
+  display: none !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #b91c1c !important;
+  margin-top: 6px !important;
+}
+
+.checkout-ajuda {
+  display: block !important;
+  font-size: 12.5px !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
+  margin-top: 6px !important;
+}

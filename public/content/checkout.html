@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Complete seus dados</title>
+</head>
+<body>
+  <div class="group/ModalOverlay bg-fill-overlay">
+    <div class="checkout-card-container" data-qa="checkout-modal">
+      <!-- Cabeçalho -->
+      <div class="checkout-header">
+        <button id="checkout-btn-voltar" type="button" class="checkout-btn-voltar">
+          &larr; Voltar
+        </button>
+        <h2 class="checkout-title">Complete seus dados</h2>
+        <button id="checkout-btn-fechar" type="button" class="checkout-btn-fechar" aria-label="Fechar">
+          &times;
+        </button>
+      </div>
+
+      <!-- Badge de valor contribuindo -->
+      <div class="checkout-badge-wrapper">
+        <div class="checkout-badge">
+          Contribuindo <strong id="checkout-valor-display">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <!-- Formulário -->
+      <form id="checkout-form" novalidate>
+        <!-- Nome -->
+        <div class="checkout-field-group">
+          <label for="checkout-nome-input" class="checkout-label">Nome</label>
+          <div class="checkout-input-wrapper">
+            <input id="checkout-nome-input" type="text" placeholder="Seu nome completo" />
+          </div>
+        </div>
+
+        <!-- Doar anonimamente -->
+        <div class="checkout-checkbox-group">
+          <label class="checkout-checkbox-label">
+            <input id="checkout-anonimo-checkbox" type="checkbox" />
+            <span>Quero contribuir anonimamente</span>
+          </label>
+        </div>
+
+        <!-- CPF (identificação do pagador no Pix) -->
+        <div class="checkout-field-group" id="checkout-cpf-field">
+          <label for="checkout-cpf-input" class="checkout-label">CPF do pagador</label>
+          <div class="checkout-input-wrapper">
+            <input id="checkout-cpf-input" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="off" />
+          </div>
+          <span id="checkout-cpf-erro" class="checkout-erro">Informe um CPF válido.</span>
+          <span class="checkout-ajuda">Exigido pelo banco para identificar quem está pagando.</span>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="checkout-field-group">
+          <label for="checkout-whatsapp-input" class="checkout-label">WhatsApp (opcional)</label>
+          <div class="checkout-input-wrapper">
+            <input id="checkout-whatsapp-input" type="text" inputmode="tel" maxlength="15" placeholder="(00) 00000-0000" />
+          </div>
+        </div>
+
+        <!-- Order Bump -->
+        <div class="checkout-orderbump-box">
+          <label class="checkout-orderbump-label">
+            <input id="checkout-orderbump-checkbox" type="checkbox" />
+            <div class="checkout-orderbump-content">
+              <strong class="checkout-orderbump-title">Turbinar minha contribuição</strong>
+              <span class="checkout-orderbump-desc">Adicionar R$ 4,99 para cobrir as taxas e impulsionar mais a petição.</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Botão Gerar Pix -->
+        <div class="checkout-submit-wrapper">
+          <button id="checkout-submit-btn" type="button" class="funil-btn-checkout">
+            Gerar Pix agora
+          </button>
+          <div class="checkout-footer-note">
+            Pagamento 100% seguro
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
