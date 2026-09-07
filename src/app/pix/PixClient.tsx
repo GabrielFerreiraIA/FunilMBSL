@@ -132,15 +132,17 @@ export function PixClient() {
           duvidar no meio do caminho.
           --------------------------------------------------------------- */}
       <header className="pix-hero">
-        <div className="pix-hero-marca">
-          <span className="pix-selo">{CONFIG.marca.selo}</span>
-          <span>{CONFIG.marca.nome}</span>
-        </div>
+        <div className="pix-hero-top-bar">
+          <div className="pix-hero-marca">
+            <span className="pix-selo">{CONFIG.marca.selo}</span>
+            <span>{CONFIG.marca.nome}</span>
+          </div>
 
-        <span className={`pix-status-pill ${pago ? 'is-pago' : expirado ? 'is-expirado' : ''}`}>
-          <i className="pix-dot" />
-          {pago ? 'Contribuição confirmada' : expirado ? 'Código expirado' : 'Aguardando pagamento'}
-        </span>
+          <span className={`pix-status-pill ${pago ? 'is-pago' : expirado ? 'is-expirado' : ''}`}>
+            <i className="pix-dot" />
+            {pago ? 'Contribuição confirmada' : expirado ? 'Código expirado' : 'Aguardando pagamento'}
+          </span>
+        </div>
 
         <h1>
           {pago ? 'Recebemos!' : <>Falta <em>pouco</em></>}
@@ -360,10 +362,20 @@ function Estilos() {
         background: linear-gradient(165deg, #1e293b 0%, #0f172a 62%, #172554 100%);
         color: #fff; padding: 22px 20px 54px; text-align: center;
         border-radius: 0 0 28px 28px; position: relative;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .pix-hero-top-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        width: 100%; max-width: 480px; margin: 0 auto 16px; gap: 12px;
+      }
+      @media (max-width: 440px) {
+        .pix-hero-top-bar {
+          flex-direction: column; justify-content: center; gap: 10px; text-align: center;
+        }
       }
       .pix-hero-marca {
         display: inline-flex; align-items: center; gap: 8px;
-        font-weight: 700; font-size: 14px; color: #cbd5e1; margin-bottom: 18px;
+        font-weight: 700; font-size: 14px; color: #cbd5e1; margin: 0;
       }
       .pix-selo {
         width: 24px; height: 24px; border-radius: 999px; background: #f34e49; color: #fff;
@@ -372,8 +384,9 @@ function Estilos() {
       .pix-status-pill {
         display: inline-flex; align-items: center; gap: 8px;
         background: rgba(250, 204, 21, .14); border: 1px solid rgba(250, 204, 21, .38);
-        color: #fde68a; font-size: 12.5px; font-weight: 800; letter-spacing: .04em;
-        text-transform: uppercase; padding: 7px 15px; border-radius: 999px;
+        color: #fde68a; font-size: 12px; font-weight: 800; letter-spacing: .04em;
+        text-transform: uppercase; padding: 6px 14px; border-radius: 999px; margin: 0;
+        white-space: nowrap;
       }
       .pix-status-pill.is-pago { background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.42); color: #86efac; }
       .pix-status-pill.is-expirado { background: rgba(248,113,113,.16); border-color: rgba(248,113,113,.42); color: #fca5a5; }
