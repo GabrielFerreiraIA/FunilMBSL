@@ -36,6 +36,8 @@ export interface FunilConfig {
   tracking: {
     utmify: { ativo: boolean; enviarConversao: boolean };
     vturb: { ativo: boolean; playerId: string | null; contaId: string | null; liberarCtaAos: number };
+    /* Grava cada evento em dados/eventos.jsonl via /api/eventos. */
+    rastreio: { ativo: boolean };
     scrollDepth: number[];
   };
   utmsPreservadas: string[];
@@ -47,9 +49,9 @@ export const CONFIG: FunilConfig = {
   campanha: {
     id: 'impeachment-moraes',
     titulo: 'IMPEACHMENT DE ALEXANDRE DE MORAES - PELO BEM DA DEMOCRACIA',
-    // Troque pelo SEU domínio quando publicar — é para onde os botões de
-    // compartilhar (etapa 5) apontam.
-    urlPublica: 'https://www.change.org/p/impeachment-de-alexandre-de-moraes-pelo-bem-da-democracia'
+    // PLACEHOLDER — troque pelo SEU domínio real antes de publicar. É para
+    // onde os botões de compartilhar (etapa 5) apontam.
+    urlPublica: 'https://mbsl.com.br/p/impeachment-de-alexandre-de-moraes'
   },
 
   contribuicao: {
@@ -85,6 +87,7 @@ export const CONFIG: FunilConfig = {
   tracking: {
     utmify: { ativo: true, enviarConversao: true },
     vturb: { ativo: false, playerId: null, contaId: null, liberarCtaAos: 0 },
+    rastreio: { ativo: true },
     scrollDepth: [25, 50, 75, 90]
   },
 
