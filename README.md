@@ -6,7 +6,7 @@ token não pode aparecer no navegador — isso exige um servidor. Next.js na
 Vercel dá esse servidor (Route Handlers) no mesmo projeto, sem precisar subir
 nada à parte.
 
-O visual é byte-a-byte o mesmo capture do Change.org. Nada do markup foi
+O visual é byte-a-byte o mesmo capture de origem. Nada do markup foi
 redesenhado.
 
 ---
@@ -241,7 +241,7 @@ Depurar: `window.FUNIL_DEBUG = true` no console.
   um botão nativo de avançar
 - A blindagem de etapas (quem abre `/pagamento` direto, sem ter assinado,
   volta para a petição)
-- Neutralização de links externos para change.org
+- Neutralização de links externos
 
 ## O que é novo nesta migração
 
@@ -257,9 +257,9 @@ Depurar: `window.FUNIL_DEBUG = true` no console.
 1. **Configure `MERCADOPAGO_ACCESS_TOKEN`** (ou implemente seu provedor) —
    sem isso, todo pagamento é simulado.
 2. **Troque `campanha.urlPublica`** em `config.ts` pelo seu domínio real —
-   hoje aponta para o change.org original.
+   hoje aponta para um placeholder (mbsl.com.br).
 3. **Os nomes em `dados.ts`** são de pessoas reais que assinaram no
-   Change.org — troque antes de publicar.
+   abaixo-assinado original — troque antes de publicar.
 4. **O botão "Já fiz o pagamento"** dispara o evento de compra no clique.
    Funciona como escape para o modo demonstração; com o Mercado Pago
    configurado, o webhook + o polling de `/api/pix/status` já confirmam

@@ -13,3 +13,6 @@
 npm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
+
+# telemetria do funil (MVP em arquivo, nao versionar)
+/dados/

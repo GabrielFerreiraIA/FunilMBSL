@@ -56,7 +56,7 @@ export async function copiar(txt: string): Promise<void> {
   try { document.execCommand('copy'); } finally { document.body.removeChild(ta); }
 }
 
-/** As páginas capturadas têm dezenas de links para change.org — neutraliza-os. */
+/** As páginas capturadas têm dezenas de links externos — neutraliza-os. */
 export function neutralizarExternos(): void {
   document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((a) => {
     const h = a.getAttribute('href') ?? '';

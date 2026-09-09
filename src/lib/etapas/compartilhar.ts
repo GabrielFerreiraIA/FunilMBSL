@@ -52,7 +52,7 @@ export function iniciarCompartilhar(): () => void {
 
   // Mostra a URL real do funil no campo exibido.
   document.querySelectorAll('*').forEach((el) => {
-    if (el.children.length === 0 && (el.textContent ?? '').includes('change.org/p/')) {
+    if (el.children.length === 0 && (el.textContent ?? '').includes('mbsl.com.br/p/')) {
       el.textContent = url;
     }
   });

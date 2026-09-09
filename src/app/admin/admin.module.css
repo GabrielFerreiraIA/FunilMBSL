@@ -1,0 +1,86 @@
+.tela {
+  min-height: 100vh;
+  background: #f4f6fb;
+  color: #1b2130;
+  font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  padding: 28px 20px 60px;
+}
+
+.limite { max-width: 1180px; margin: 0 auto; }
+
+/* ---- login ---- */
+.caixaLogin {
+  max-width: 340px;
+  margin: 12vh auto 0;
+  background: #fff;
+  border: 1px solid #e2e6f0;
+  border-radius: 14px;
+  padding: 28px 26px;
+  box-shadow: 0 12px 40px rgba(24, 36, 71, .08);
+}
+.caixaLogin h1 { margin: 0 0 4px; font-size: 19px; }
+.caixaLogin p { margin: 0 0 20px; color: #6b7590; font-size: 13px; }
+.campo { display: block; margin-bottom: 12px; }
+.campo span { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #4a5570; }
+.campo input {
+  width: 100%; box-sizing: border-box; padding: 9px 11px;
+  border: 1px solid #d2d8e6; border-radius: 8px; font-size: 14px; background: #fff; color: inherit;
+}
+.campo input:focus { outline: 2px solid #4771ff; outline-offset: -1px; border-color: transparent; }
+
+.botao {
+  width: 100%; padding: 10px; border: 0; border-radius: 8px;
+  background: #2547d0; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.botao:hover { background: #1c39ad; }
+.botao:disabled { opacity: .55; cursor: default; }
+
+.erro { margin: 10px 0 0; color: #c02525; font-size: 13px; }
+
+/* ---- cabeçalho ---- */
+.topo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.topo h1 { margin: 0; font-size: 21px; }
+.fonte {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  padding: 3px 8px; border-radius: 999px; background: #e3e9fb; color: #2547d0;
+}
+.espaco { flex: 1; }
+.link { background: none; border: 0; color: #4a5570; cursor: pointer; font-size: 13px; text-decoration: underline; padding: 0; }
+
+/* ---- métricas ---- */
+.metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
+.metrica { background: #fff; border: 1px solid #e2e6f0; border-radius: 12px; padding: 14px 16px; }
+.metrica b { display: block; font-size: 25px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.metrica span { font-size: 12px; color: #6b7590; }
+
+/* ---- filtros ---- */
+.filtros { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.filtros select, .filtros input {
+  padding: 7px 10px; border: 1px solid #d2d8e6; border-radius: 8px;
+  font-size: 13px; background: #fff; color: inherit;
+}
+.filtros input { flex: 1; min-width: 180px; }
+
+/* ---- tabela ---- */
+.rolagem { overflow-x: auto; background: #fff; border: 1px solid #e2e6f0; border-radius: 12px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabela th {
+  text-align: left; padding: 10px 12px; background: #f7f9fd; border-bottom: 1px solid #e2e6f0;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #6b7590; white-space: nowrap;
+}
+.tabela td { padding: 9px 12px; border-bottom: 1px solid #eef1f7; vertical-align: top; }
+.tabela tr:last-child td { border-bottom: 0; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #4a5570; }
+.nowrap { white-space: nowrap; }
+
+.tag { display: inline-block; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.tagPageview { background: #e6f0ff; color: #1c4fd0; }
+.tagClique   { background: #fdf0dc; color: #96590a; }
+.tagNomeado  { background: #e2f6e6; color: #196a2a; }
+
+.vazio { padding: 34px; text-align: center; color: #6b7590; }
+.aviso {
+  background: #fff6e0; border: 1px solid #f0dcae; color: #7a5610;
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; font-size: 13px;
+}
+.aviso code { font-family: ui-monospace, Menlo, monospace; background: #fdedcb; padding: 1px 5px; border-radius: 4px; }
