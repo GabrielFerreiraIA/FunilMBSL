@@ -22,6 +22,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Estado } from '@/lib/estado';
 import { Track } from '@/lib/track';
 import { neutralizarExternos } from '@/lib/dom';
+import { iniciarRastreio } from '@/lib/rastreio';
 import { iniciarNotificacoes, pararNotificacoes } from '@/lib/notificacoes';
 import { iniciarPeticao } from '@/lib/etapas/peticao';
 import { iniciarAssinar } from '@/lib/etapas/assinar';
@@ -50,6 +51,7 @@ export function FunilPagina({ arquivo, etapa }: { arquivo: string; etapa: EtapaB
     let cancelado = false;
     let pararEtapa: () => void = () => {};
     let pararScroll: () => void = () => {};
+    let pararRastreio: () => void = () => {};
     let aoVisibilidadeMudar: (() => void) | null = null;
 
     async function montar() {
@@ -65,6 +67,7 @@ export function FunilPagina({ arquivo, etapa }: { arquivo: string; etapa: EtapaB
       Estado.capturarUTMs();
       Track.setEtapa(etapa);
       neutralizarExternos();
+      pararRastreio = iniciarRastreio();
       pararScroll = Track.scroll();
 
       aoVisibilidadeMudar = () => {
@@ -85,6 +88,7 @@ export function FunilPagina({ arquivo, etapa }: { arquivo: string; etapa: EtapaB
 
     return () => {
       cancelado = true;
+      pararRastreio();
       pararScroll();
       if (aoVisibilidadeMudar) document.removeEventListener('visibilitychange', aoVisibilidadeMudar);
       pararNotificacoes();

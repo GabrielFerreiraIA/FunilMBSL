@@ -10,6 +10,7 @@
 
 import { CONFIG } from './config';
 import { Estado } from './estado';
+import { registrar } from './rastreio';
 
 export type EventoNome =
   | 'view_peticao' | 'click_assinar' | 'view_form' | 'assinatura'
@@ -105,6 +106,9 @@ export const Track = {
     try {
       document.dispatchEvent(new CustomEvent('funil:' + nome, { detail: payload }));
     } catch { /* CustomEvent indisponível em navegadores muito antigos */ }
+
+    // Segundo destino: os pixels são de terceiros, este é o nosso.
+    registrar(nome, 'nomeado', payload);
 
     if (window.FUNIL_DEBUG) console.log('[funil]', nome, payload);
   },
