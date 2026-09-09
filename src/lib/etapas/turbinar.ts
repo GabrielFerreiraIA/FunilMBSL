@@ -2,13 +2,15 @@ import { CONFIG } from '../config';
 import { Track } from '../track';
 import { ir, exigirAssinatura } from '../navegacao';
 import { qa, aoClicar } from '../dom';
-import { animarFeedDoadores } from './comuns';
+import { animarFeedDoadores, personalizarSaudacao } from './comuns';
 
 export function iniciarTurbinar(): () => void {
   if (!exigirAssinatura()) return () => {};
 
   const ancora = CONFIG.contribuicao.valorAncora;
   Track.ev('view_upsell', { valor_ancora: ancora });
+
+  personalizarSaudacao();
 
   const pararFeed = animarFeedDoadores();
 

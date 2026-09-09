@@ -1,6 +1,6 @@
 import { CONFIG } from '../config';
 import { DADOS } from '../dados';
-import { fmtMoeda } from '../estado';
+import { Estado, fmtMoeda } from '../estado';
 
 /** Quantas pessoas o valor escolhido alcança — proporcional, arredondado. */
 export function alcanceDe(valor: number): number {
@@ -68,3 +68,33 @@ export function animarFeedDoadores(): () => void {
   return () => clearInterval(timer);
 }
 
+
+/* O capture foi tirado da sessão de um signatário real, então os títulos vêm
+   com o primeiro nome dele escrito no meio da frase ("Gabriel, seu apoio ainda
+   pode ser maior!"). Troca pelo nome que a própria pessoa preencheu na etapa de
+   assinatura. Sem nome guardado, remove o vocativo — saudar o visitante pelo
+   nome de um estranho é pior do que não saudar. */
+const NOME_DO_CAPTURE = /Gabriel(\s+Ferreira)?/g;
+
+export function personalizarSaudacao(): void {
+  const nome = Estado.primeiroNome();
+
+  document.querySelectorAll<HTMLElement>('h1, h2').forEach((el) => {
+    // textContent só é seguro de reescrever em nó folha: num título com
+    // <strong> ou <span> dentro, atribuir texto apagaria a marcação.
+    if (el.children.length > 0) return;
+
+    const txt = el.textContent ?? '';
+    if (!txt.includes('Gabriel')) return;
+
+    if (nome) {
+      el.textContent = txt.replace(NOME_DO_CAPTURE, nome);
+      return;
+    }
+
+    const semVocativo = txt
+      .replace(/^Gabriel(\s+Ferreira)?,\s*/, '')      // "Gabriel, seu apoio…"
+      .replace(/,\s*Gabriel(\s+Ferreira)?\b/g, '');   // "Incrível, Gabriel! …"
+    el.textContent = semVocativo.charAt(0).toUpperCase() + semVocativo.slice(1);
+  });
+}

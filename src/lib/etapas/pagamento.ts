@@ -5,7 +5,7 @@ import { Estado, fmt, fmtMoeda } from '../estado';
 import { Track } from '../track';
 import { ir, exigirAssinatura } from '../navegacao';
 import { qa, qaAll, aoClicar, toast } from '../dom';
-import { alcanceDe, animarFeedDoadores } from './comuns';
+import { alcanceDe, animarFeedDoadores, personalizarSaudacao } from './comuns';
 
 export function iniciarPagamento(): () => void {
   if (!exigirAssinatura()) return () => {};
@@ -18,6 +18,8 @@ export function iniciarPagamento(): () => void {
   const submit = qa('promote-submit-button');
 
   Track.ev('view_pagamento', { valor_inicial: valor });
+
+  personalizarSaudacao();
 
 
   /* -- seleção visual --
